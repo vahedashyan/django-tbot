@@ -1,0 +1,6 @@
+include AUTHORS.rst
+include CONTRIBUTING.rst
+include RELEASE.rst
+include LICENSE
+include README.rst
+recursive-include django-tbot *.html *.png *.gif *js *.css *jpg *jpeg *svg *py *.txt
