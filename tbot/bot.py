@@ -3,6 +3,7 @@ import inspect
 import importlib
 from tbot import configs
 from telegram import Bot, ChatAction
+from .command import Command
 
 
 class BotApp(Bot):
@@ -20,12 +21,12 @@ class BotApp(Bot):
     def make_configs(self):
         print('{} configured'.format(self.name))
 
-    def command(self, command_name=None, default=True):
+    def command(self, command_name=None, argument_serializer=None, default=True):
         def decorator(f):  # TODO  handle the case with duplicate command names
             if inspect.getmodule(f).__name__ == self.default_commands_path:
-                self.default_commands.update({command_name: f})
+                self.default_commands.update({command_name: Command(command_name, argument_serializer)})
             else:
-                self.commands.update({command_name: f})
+                self.commands.update({command_name: Command(command_name, argument_serializer)})
             return f
 
         return decorator
