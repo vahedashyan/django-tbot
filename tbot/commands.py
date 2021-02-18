@@ -13,3 +13,10 @@ def unknown_handler(chat_id, *args, **kwargs):
 def unknown_handler(chat_id, *args, **kwargs):
     message = "Sorry, invalid command: {}".format(kwargs.get('input_command'))
     bot.send_message(chat_id, message)
+
+
+@bot.command(command_name="error")
+def unknown_handler(chat_id, message=None, *args, **kwargs):
+    if not message:
+        message = "Sorry, invalid command: {}".format(kwargs.get('input_command'))
+    bot.send_message(chat_id, message)
