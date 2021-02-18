@@ -1,3 +1,6 @@
+from builtins import property
+
+from .command import Command
 from .utils import get_bot
 import inspect
 
@@ -27,20 +30,21 @@ class BotUpdateHandler(object):
                 command_arguments = command.get('arguments')
                 ex_functions.append(self.make_command_function_dict(name=command_name, arguments=command_arguments))
         elif self.text:
-            ex_functions.append(self.make_command_function_dict(name='unknown'))
+            ex_functions.append(
+                self.make_command_function_dict(name='unknown', arguments=[self.input_command(self.text)]))
         return ex_functions
 
     def make_command_function_dict(self, name, arguments=None):
-        funtion = self.get_command_from_registered(name)
+        command = self.get_command_from_registered(name)
         undefined_arguements = ()
         defined_arguments = {}
         if arguments:
             defined_arguments, undefined_arguements = self._define_arguments(arguments)
 
-        funct_dict = {'function': funtion,
-                      'args': tuple(undefined_arguements),
-                      'kwargs': dict(defined_arguments)}
-        return funct_dict
+        command_dict = {'command': command,
+                        'args': tuple(undefined_arguements),
+                        'kwargs': dict(defined_arguments)}
+        return command_dict
 
     def _define_arguments(self, argument_list):
         defined_arguments = []
@@ -52,35 +56,32 @@ class BotUpdateHandler(object):
             else:
                 undefined_arguemtns.append(str(argument))
 
-
         return defined_arguments, undefined_arguemtns
 
     def parse_text(self):
         command_list = []
-        arguments = []
         for command in self.entities:
             command_dict = {}
             command_text = self.text[command.get('offset'):command.get('offset') + command.get('length')]
-            command_arguemts = self.text[command.get('offset') + command.get('length'):].split('/')[0].split()
-            print({"command": command_text, "arguments": command_arguemts})
+            command_arguments = self.text[command.get('offset') + command.get('length'):].split('/')[0].split()
+            command_arguments.append(self.input_command(command_text))
 
             if command.get('type') == 'bot_command':
                 command_dict['name'] = command_text.strip('/')
-                command_dict['arguments'] = command_arguemts
+                command_dict['arguments'] = command_arguments
                 command_list.append(command_dict)
         return command_list
 
     def run_commands(self):
-        function_list = self.get_commands()
-        for function_item in function_list:
-            f = function_item.get('function')
-            args = ("afwdgsebsebrtbserb",)
-            kwargs = function_item.get('kwargs')
+        commands_list = self.get_commands()
+        for command_item in commands_list:
+            command = command_item.get('command')
+            args = command_item.get('args')
+            kwargs = command_item.get('kwargs')
 
-            if callable(f) and isinstance(f, object):
-                defined_args = set(inspect.getargs(f.__code__).args).intersection(set(kwargs.keys()))
+            if isinstance(command, Command):
                 try:
-                    f(self.chat_id, **kwargs)
+                    command(self.chat_id, *args, **kwargs)
                 except TypeError as e:
                     message = "Required arguments does not exist."
                     self.get_command_from_registered('error')(self.chat_id, message, *args, **kwargs)
@@ -89,13 +90,17 @@ class BotUpdateHandler(object):
                 self.throw_invalid_command(*args, **kwargs)
 
     def throw_invalid_command(self, *args, **kwargs):
-        self.get_command_from_registered('unknown')(chat_id=self.chat_id, *args, **kwargs)
+        self.get_command_from_registered('unknown')(self.chat_id, *args, **kwargs)
 
     def get_command_from_registered(self, name=None):
         ex_function = self.bot.commands.get(name)
         if not ex_function:
             ex_function = self.bot.default_commands.get(name)
         return ex_function
+
+    @staticmethod
+    def input_command(command_text):
+        return "input_command={}".format(command_text)
 
     @property
     def message(self):

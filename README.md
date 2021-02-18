@@ -81,3 +81,5 @@ Set the following settings in your project's ``settings.py``
     }
 
 The  main class in ``django-tbot`` extends the telegram's Bot class. It means that you can use all telegram bot functionality. 
+
+Activate bot: ``/bot/activate``

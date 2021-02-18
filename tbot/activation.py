@@ -12,7 +12,7 @@ class BotActivationView(APIView):
         try:
             response = requests.get(
                 f"{bot.base_url}/setWebhook?url={configs.BOT_WEBHOOK_URL}/bot/handler/")
-            if response.status_code is not 200:
+            if response.status_code != 200:
                 # TODO handle specific errors
                 return HttpResponse("There are some problems.")
             return HttpResponse("Activated")

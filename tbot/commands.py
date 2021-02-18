@@ -4,7 +4,7 @@ bot = get_bot()
 
 
 @bot.command(command_name="docs")
-def unknown_handler(chat_id, *args, **kwargs):
+def docs_handler(chat_id, *args, **kwargs):
     message = "Please read the docs-->"
     bot.send_message(chat_id, message)
 
@@ -16,7 +16,7 @@ def unknown_handler(chat_id, *args, **kwargs):
 
 
 @bot.command(command_name="error")
-def unknown_handler(chat_id, message=None, *args, **kwargs):
+def error_handler(chat_id, message=None, *args, **kwargs):
     if not message:
         message = "Sorry, invalid command: {}".format(kwargs.get('input_command'))
     bot.send_message(chat_id, message)

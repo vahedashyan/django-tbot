@@ -24,9 +24,9 @@ class BotApp(Bot):
     def command(self, command_name=None, argument_serializer=None, default=True):
         def decorator(f):  # TODO  handle the case with duplicate command names
             if inspect.getmodule(f).__name__ == self.default_commands_path:
-                self.default_commands.update({command_name: Command(command_name, argument_serializer)})
+                self.default_commands.update({command_name: Command(command_name, f, argument_serializer)})
             else:
-                self.commands.update({command_name: Command(command_name, argument_serializer)})
+                self.commands.update({command_name: Command(command_name, f, argument_serializer)})
             return f
 
         return decorator
