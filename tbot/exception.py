@@ -20,6 +20,7 @@ class TelegramBotBaseError(Exception):
             "error_message": self.message,
         }
 
+
     def __str__(self):
         return self.message
 

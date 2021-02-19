@@ -26,7 +26,7 @@ class CommandGenerator:
     def _get_command(cls, name):
         ex_function = cls.bot.commands.get(name)
         if not ex_function:
-            ex_function = cls.bot.default_commands.get(name)
+            ex_function = cls._get_default_command(name)
         return ex_function
 
     @classmethod

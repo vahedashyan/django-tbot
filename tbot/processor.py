@@ -23,8 +23,9 @@ class CommandProcessor:
         try:
             func(chat_id=self.chat_id, *command_item.args, **command_item.kwargs)
         except Exception as e:
-            print(e)
-            print("Something goes wrong")
+            message = "Required arguments does not exist."
+            self.throw_invalid_command(error_command='error', message=message, *(),
+                                       **command_item.kwargs)
 
     @property
     def chat_id(self):
@@ -33,3 +34,13 @@ class CommandProcessor:
     @property
     def message_type(self):
         return self.message.get('type')
+
+    # TODO handle exceptions
+    def throw_invalid_command(self, error_command, message, *args, **kwargs):
+        self.get_command_from_registered(error_command)(self.chat_id, message, *args, **kwargs)
+
+    def get_command_from_registered(self, name=None):
+        ex_function = self.bot.commands.get(name)
+        if not ex_function:
+            ex_function = self.bot.default_commands.get(name)
+        return ex_function
