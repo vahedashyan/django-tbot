@@ -51,4 +51,5 @@ class MessageSerializer(BaseSerializer):
 
 class UpdateSerializer(BaseSerializer):
     update_id = serializers.IntegerField()
-    message = MessageSerializer()
+    message = MessageSerializer(required=False)
+    edited_message = MessageSerializer(required=False)

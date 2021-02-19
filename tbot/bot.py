@@ -34,8 +34,6 @@ class BotApp(Bot):
     def _register_commands(self):
         importlib.import_module(self.commands_path)
         importlib.import_module(self.default_commands_path)
-        print(self.commands.keys())
-        print(self.default_commands.keys())
 
     def start(self):
         self._register_commands()

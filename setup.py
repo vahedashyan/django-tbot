@@ -31,8 +31,8 @@ def is_requirement(line):
 
 
 setup(
-    name='django-tbot',
-    version='0.0.1',
+    name='django-tbot-test-module',
+    version='0.0.3',
     description='Telegram Bot implementation for Django Framework',
     author='Vahe Dashyan',
     author_email='vahedashyan@gmail.com',
