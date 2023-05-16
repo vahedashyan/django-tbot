@@ -1,3 +1,4 @@
 requests==2.25.1
 python-telegram-bot==13.2
 
+tornado>=6.3.2 # not directly required, pinned by Snyk to avoid a vulnerability
